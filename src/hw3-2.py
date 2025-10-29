@@ -1,16 +1,29 @@
 from sys import argv
 
 
-def add_binary(a, b):
-    return bin(int(a, 2) + int(b, 2))[2:]
+def recursive_multiply(x: int, y: int, _out=lambda x: None) -> int:
+    _out()
+    if x <= 1 or y <= 1:
+        _out()
+        return x * y
+    n = min(x.bit_length(), y.bit_length())
+    _out()
+    m = n // 2
+    _out()
+    xh = x >> m
+    _out()
+    xl = x - (xh << m)
+    _out()
+    yh = y >> m
+    _out()
+    yl = y - (yh << m)
+    _out()
+    zc = recursive_multiply(xh + xl, yh + yl)
+    zh = recursive_multiply(xh, yh)
+    zl = recursive_multiply(xl, yl)
 
-
-def subtract_binary(a, b):
-    return bin(int(a, 2) - int(b, 2))[2:]
-
-
-def shift_left(a, n):
-    return a + "0" * n
+    _out([m, xh, xl, yh, yl, zh, zc, zl])
+    return zh * (1 << (2 * m)) + (zc - zh - zl) * (1 << m) + zl
 
 
 def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None:
@@ -21,23 +34,12 @@ def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None
 
     with open(output_file, "w") as outfile:
 
-        def recursive_multiply(x: int, y: int) -> int:
-            if x <= 1 or y <= 1:
-                return x * y
-            n = min(x.bit_length(), y.bit_length())
-            m = n // 2
-            xh = x >> m
-            xl = x - (xh << m)
-            yh = y >> m
-            yl = y - (yh << m)
-            zc = recursive_multiply(xh + xl, yh + yl)
-            zh = recursive_multiply(xh, yh)
-            zl = recursive_multiply(xl, yl)
-            outfile.write(",".join(map(str, [m, xh, xl, yh, yl, zh, zc, zl])) + "\n")
+        def out_write(ls: list[int] | None = None):
+            if ls is None:
+                return
+            outfile.write(",".join(map(str, ls)) + "\n")
 
-            return zh * (1 << (2 * m)) + (zc - zh - zl) * (1 << m) + zl
-
-        final = recursive_multiply(X, Y)
+        final = recursive_multiply(X, Y, out_write)
         print("fin: " + str(final))
 
 
