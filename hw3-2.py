@@ -6,35 +6,46 @@ def fl(value: float) -> int:
     return int(value)
 
 
+def add_binary(a, b):
+    return bin(int(a, 2) + int(b, 2))[2:]
+
+
+def subtract_binary(a, b):
+    return bin(int(a, 2) - int(b, 2))[2:]
+
+
+def shift_left(a, n):
+    return a + "0" * n
+
+
 def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None:
     with open(input_file, "r") as infile:
         x, y = map(int, infile.readline().strip().split())
 
-    def recursive_multiply(x: int, y: int) -> int:
-        """
-        Multiplies two integers x and y using the Karatsuba recursive multiplication.
-        This implementation works on bit lengths and uses shifts instead of powers/XOR.
-        """
-        # base cases
-        if x == 0 or y == 0:
-            return 0
-        m = max(x.bit_length(), y.bit_length())
-        if m == 1:
-            return x * y
-
-        n = max(len(str(x)), len(str(y)))
-        m = n // 2
-        high_x, low_x = divmod(x, 10**m)
-        high_y, low_y = divmod(y, 10**m)
-        zh = recursive_multiply(high_x, high_y)
-        zc = recursive_multiply(low_x, low_y)
-        zl = recursive_multiply(high_x + low_x, high_y + low_y)
-        return zh * 10 ** (2 * m) + (zl - zh - zc) * 10**m + zc
-
-    # compute result and write to output file
-    result = recursive_multiply(x, y)
     with open(output_file, "w") as outfile:
-        outfile.write(str(result) + "\n")
+
+        def recursive_multiply(X, Y):
+            n = max(len(X), len(Y))
+            # Pad the shorter string with zeros
+            X = X.zfill(n)
+            Y = Y.zfill(n)
+            if n == 1:
+                return str(int(X) * int(Y))
+            m = n // 2
+            xh, xl = X[:m], X[m:]
+            yh, yl = Y[:m], Y[m:]
+            zh = recursive_multiply(xh, yh)
+            zc = recursive_multiply(add_binary(xh, xl), add_binary(yh, yl))
+            zl = recursive_multiply(xl, yl)
+            outfile.write(",".join([X, Y, zh, zc, zl]) + "\n")
+
+            temp1 = shift_left(zh, 2 * (n - m))
+            temp2 = shift_left(subtract_binary(zc, add_binary(zh, zl)), n - m)
+            result = add_binary(add_binary(temp1, temp2), zl)
+            return result.lstrip("0") or "0"
+
+        # compute result and write to output file
+        recursive_multiply(x, y)
 
 
 if __name__ == "__main__":
