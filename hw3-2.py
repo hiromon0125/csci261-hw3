@@ -24,9 +24,9 @@ def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None
         def recursive_multiply(X, Y):
             n = min(len(X), len(Y))
             m = n // 2
-            X = X.zfill(n)
-            Y = Y.zfill(n)
-            if n < 2:
+            # X = X.zfill(n)
+            # Y = Y.zfill(n)
+            if m <= 2:
                 return bin(int(X, 2) * int(Y, 2))[2:]
             xh, xl = X[:m], X[m:]
             yh, yl = Y[:m], Y[m:]
