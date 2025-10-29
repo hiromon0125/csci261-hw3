@@ -1,23 +1,22 @@
 from sys import argv
 
 
-def recursive_multiply(x: int, y: int, _out=lambda x=None: None) -> int:
-    _out()
+def noop(x=None, step=1):
+    """Counter call signiture"""
+    return x, step
+
+
+def recursive_multiply(x: int, y: int, _out=noop) -> int:
     if x <= 1 or y <= 1:
-        _out()
+        _out(step=2)
         return x * y
+    _out(step=7)
     n = min(x.bit_length(), y.bit_length())
-    _out()
     m = n // 2
-    _out()
     xh = x >> m
-    _out()
     xl = x - (xh << m)
-    _out()
     yh = y >> m
-    _out()
     yl = y - (yh << m)
-    _out()
     zc = recursive_multiply(xh + xl, yh + yl, _out)
     zh = recursive_multiply(xh, yh, _out)
     zl = recursive_multiply(xl, yl, _out)
@@ -34,7 +33,7 @@ def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None
 
     with open(output_file, "w") as outfile:
 
-        def out_write(ls: list[int] | None = None):
+        def out_write(ls: list[int] | None = None, step=1):
             if ls is None:
                 return
             outfile.write(",".join(map(str, ls)) + "\n")
