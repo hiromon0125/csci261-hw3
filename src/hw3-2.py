@@ -18,9 +18,9 @@ def recursive_multiply(x: int, y: int, _out=lambda x=None: None) -> int:
     _out()
     yl = y - (yh << m)
     _out()
-    zc = recursive_multiply(xh + xl, yh + yl)
-    zh = recursive_multiply(xh, yh)
-    zl = recursive_multiply(xl, yl)
+    zc = recursive_multiply(xh + xl, yh + yl, _out)
+    zh = recursive_multiply(xh, yh, _out)
+    zl = recursive_multiply(xl, yl, _out)
 
     _out([m, xh, xl, yh, yl, zh, zc, zl])
     return zh * (1 << (2 * m)) + (zc - zh - zl) * (1 << m) + zl
