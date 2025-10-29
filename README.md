@@ -3,7 +3,7 @@
 Recursive multiplication problem
 
 ---
-Recursive Multiplication
+## Problem 2 Recursive Multiplication
 ---
 1. function recursive_multiply(x, y)
 2. x = 2^fl(n/2) * xh + xl
@@ -22,3 +22,10 @@ operations, and thus have O(n) runtime overall at the level of each function cal
 • Since we split the input in half and now have only three recursive calls, our recurrence becomes
 T (n) = 3T (n/2) + O(n)
 • And this has O(nlog2(3)) ≈ O(n1.59), which strictly improves upon the "grade-school" multiplication
+
+
+---
+## Problem 3
+---
+
+Add instruction count on mult calculation from problem 2 and new mult_pub.py.
