@@ -1,7 +1,7 @@
 from sys import argv
 
 
-def recursive_multiply(x: int, y: int, _out=lambda x: None) -> int:
+def recursive_multiply(x: int, y: int, _out=lambda x=None: None) -> int:
     _out()
     if x <= 1 or y <= 1:
         _out()
