@@ -22,18 +22,14 @@ def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None
         if m == 1:
             return x * y
 
-        m2 = m // 2
-
-        xl = x & ((1 << m2) - 1)
-        xh = x >> m2
-        yl = y & ((1 << m2) - 1)
-        yh = y >> m2
-
-        z2 = recursive_multiply(xh, yh)
-        z0 = recursive_multiply(xl, yl)
-        z1 = recursive_multiply(xh + xl, yh + yl) - z2 - z0
-
-        return (z2 << (2 * m2)) + (z1 << m2) + z0
+        n = max(len(str(x)), len(str(y)))
+        m = n // 2
+        high_x, low_x = divmod(x, 10**m)
+        high_y, low_y = divmod(y, 10**m)
+        zh = recursive_multiply(high_x, high_y)
+        zc = recursive_multiply(low_x, low_y)
+        zl = recursive_multiply(high_x + low_x, high_y + low_y)
+        return zh * 10 ** (2 * m) + (zl - zh - zc) * 10**m + zc
 
     # compute result and write to output file
     result = recursive_multiply(x, y)
