@@ -22,17 +22,17 @@ def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None
     with open(output_file, "w") as outfile:
 
         def recursive_multiply(X, Y):
-            n = max(len(X), len(Y))
+            n = min(len(X), len(Y))
+            m = n // 2
             X = X.zfill(n)
             Y = Y.zfill(n)
-            if int(X, 2) <= 1 or int(Y, 2) <= 1:
+            if n < 2:
                 return bin(int(X, 2) * int(Y, 2))[2:]
-            m = n // 2
             xh, xl = X[:m], X[m:]
             yh, yl = Y[:m], Y[m:]
-            zh = recursive_multiply(xh, yh)
-            zc = recursive_multiply(add_binary(xh, xl), add_binary(yh, yl))
             zl = recursive_multiply(xl, yl)
+            zc = recursive_multiply(add_binary(xh, xl), add_binary(yh, yl))
+            zh = recursive_multiply(xh, yh)
             outfile.write(
                 ",".join(
                     map(
