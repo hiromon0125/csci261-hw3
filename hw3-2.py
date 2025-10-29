@@ -22,7 +22,6 @@ def main(input_file: str = "input.txt", output_file: str = "output.txt") -> None
     with open(output_file, "w") as outfile:
 
         def recursive_multiply(x: int, y: int) -> int:
-            print(x, y)
             if x <= 1 or y <= 1:
                 return x * y
             n = min(x.bit_length(), y.bit_length())
