@@ -8,7 +8,7 @@ def noop(x=None, step=1):
 
 def recursive_multiply(x: int, y: int, _out=noop) -> int:
     if x <= 1 or y <= 1:
-        _out(step=2)
+        _out()
         return x * y
     _out(step=7)
     n = min(x.bit_length(), y.bit_length())

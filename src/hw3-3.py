@@ -25,7 +25,7 @@ def mult_sp(x, y, _out=noop):
 
 def recursive_multiply(x: int, y: int, _out=noop) -> int:
     if x <= 1 or y <= 1:
-        _out(step=2)
+        _out()
         return mult_sp(x, y, _out)
     _out(step=7)
     n = min(x.bit_length(), y.bit_length())
@@ -41,8 +41,8 @@ def recursive_multiply(x: int, y: int, _out=noop) -> int:
     _out([m, xh, xl, yh, yl, zh, zc, zl])
     return add_sp(
         add_sp(
-            mult_sp(zh, (1 << mult_sp(2, m, _out)), _out),
-            mult_sp(add_sp(add_sp(zc, -zh, _out), -zl, _out), (1 << m), _out),
+            zh * (1 << (2 * m)),
+            add_sp(add_sp(zc, -zh, _out), -zl, _out) * (1 << m),
             _out,
         ),
         zl,
