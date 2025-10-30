@@ -3,9 +3,11 @@ def noop(x=None, step=1):
     return x, step
 
 
-def lg_flr(n):
+def lg_flr(n, _out=noop):
+    _out()
     r = 0
     while n > 0:
+        _out(step=2)
         n >>= 1
         r += 1
     return r

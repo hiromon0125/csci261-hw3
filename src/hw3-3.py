@@ -1,10 +1,53 @@
 import importlib
 from itertools import count
+from sys import argv
 
-from mult_pub import lg_flr, mult
+from mult_pub import add, lg_flr, mult
 
 # hw3-2.py cannot be imported with a hyphen, so we use importlib
 hw3_2 = importlib.import_module("hw3-2")
+
+
+def noop(x=None, step=1):
+    """Counter call signiture"""
+    return x, step
+
+
+def add_sp(x, y, _out=noop):
+    m, n = 1 + 2 * lg_flr(x), 1 + 2 * lg_flr(y)
+    return add(x, y, m, n, _out)
+
+
+def mult_sp(x, y, _out=noop):
+    m, n = 1 + 2 * lg_flr(x), 1 + 2 * lg_flr(y)
+    return mult(x, y, m, n, _out)
+
+
+def recursive_multiply(x: int, y: int, _out=noop) -> int:
+    if x <= 1 or y <= 1:
+        _out(step=2)
+        return mult_sp(x, y, _out)
+    _out(step=7)
+    n = min(x.bit_length(), y.bit_length())
+    m = n // 2
+    xh = x >> m
+    xl = x - (xh << m)
+    yh = y >> m
+    yl = y - (yh << m)
+    zc = recursive_multiply(add_sp(xh, xl, _out), add_sp(yh, yl, _out), _out)
+    zh = recursive_multiply(xh, yh, _out)
+    zl = recursive_multiply(xl, yl, _out)
+
+    _out([m, xh, xl, yh, yl, zh, zc, zl])
+    return add_sp(
+        add_sp(
+            mult_sp(zh, (1 << mult_sp(2, m, _out)), _out),
+            mult_sp(add_sp(add_sp(zc, -zh, _out), -zl, _out), (1 << m), _out),
+            _out,
+        ),
+        zl,
+        _out,
+    )
 
 
 def init_counter():
@@ -18,7 +61,9 @@ def init_counter():
 
 
 if __name__ == "__main__":
-    test_bit_length = [2, 4, 8, 16, 32, 64, 128, 256]
+    sample_domain = int(argv[1]) if len(argv) > 1 else 8
+    test_bit_length = list(map(lambda x: 2**x, range(1, sample_domain + 1)))
+
     print("HW3-2 Recursive Multiply:")
     c_prev = None
     for bits in test_bit_length:
@@ -37,8 +82,8 @@ if __name__ == "__main__":
         x = (1 << bits) - 1
         y = (1 << bits) - 1
         counter, incre = init_counter()
-        final = mult(x, y, lg_flr(x), lg_flr(y), _out=incre)
+        final = recursive_multiply(x, y, _out=incre)
         c = next(counter) - 1
         r = f"Ratio: {c / c_prev:.4f}" if c_prev is not None else ""
-        print(f"Bits len: {bits} \tSteps: {c} \t{r}")
+        print(f"Bits len: {bits} \tSteps: {c}\t{r}")
         c_prev = c
