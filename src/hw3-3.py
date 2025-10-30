@@ -1,11 +1,7 @@
-import importlib
 from itertools import count
 from sys import argv
 
 from mult_pub import add, lg_flr, mult
-
-# hw3-2.py cannot be imported with a hyphen, so we use importlib
-hw3_2 = importlib.import_module("hw3-2")
 
 
 def noop(x=None, step=1):
@@ -70,7 +66,7 @@ if __name__ == "__main__":
         x = (1 << bits) - 1
         y = (1 << bits) - 1
         counter, incre = init_counter()
-        final = hw3_2.recursive_multiply(x, y, _out=incre)
+        final = recursive_multiply(x, y, _out=incre)
         c = next(counter) - 1
         r = f"Ratio: {c / c_prev:.4f}" if c_prev is not None else ""
         print(f"Bits len: {bits} \tSteps: {c} \t{r}")
@@ -82,7 +78,7 @@ if __name__ == "__main__":
         x = (1 << bits) - 1
         y = (1 << bits) - 1
         counter, incre = init_counter()
-        final = recursive_multiply(x, y, _out=incre)
+        final = mult_sp(x, y, _out=incre)
         c = next(counter) - 1
         r = f"Ratio: {c / c_prev:.4f}" if c_prev is not None else ""
         print(f"Bits len: {bits} \tSteps: {c}\t{r}")
